@@ -21,7 +21,7 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t akshayrajput03/motoride-frontend .
+        run: docker build -t akshayrajput03/motoride-frontend -f BikeRideReactApp/Dockerfile .
 
     - name: Push Docker image
       run: |
