@@ -1,5 +1,15 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Animated, Easing } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  Animated,
+  Easing,
+  ImageBackground
+} from 'react-native';
 import api from '../api/axiosConfig';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
@@ -57,73 +67,93 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-      <Animated.View style={{ transform: [{ scale: buttonAnim }] }}>
+    <ImageBackground
+      source={require('../assets/background-image.jpg')} // Replace with your background image path
+      style={styles.background}
+    >
+      <View style={styles.container}>
+        <Text style={styles.title}>Login</Text>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Username or Email"
+            placeholderTextColor="#6D6D6D" // Darker gray for placeholder text
+            value={username}
+            onChangeText={setUsername}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            placeholderTextColor="#6D6D6D" // Darker gray for placeholder text
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
+        </View>
+        <Animated.View style={{ transform: [{ scale: buttonAnim }] }}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              animateButton();
+              handleLogin();
+            }}
+            disabled={loading}
+          >
+            <Text style={styles.buttonText}>{loading ? 'Loading...' : 'Login'}</Text>
+          </TouchableOpacity>
+        </Animated.View>
         <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            animateButton();
-            handleLogin();
-          }}
-          disabled={loading}
+          style={styles.linkButton}
+          onPress={() => navigation.navigate('ForgotPassword')}
         >
-          <Text style={styles.buttonText}>{loading ? 'Loading...' : 'Login'}</Text>
+          <Text style={styles.linkButtonText}>Forgot Password</Text>
         </TouchableOpacity>
-      </Animated.View>
-      <TouchableOpacity
-        style={styles.linkButton}
-        onPress={() => navigation.navigate('ForgotPassword')}
-      >
-        <Text style={styles.linkButtonText}>Forgot Password</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.linkButton}
-        onPress={() => navigation.navigate('Register')}
-      >
-        <Text style={styles.linkButtonText}>Register</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity
+          style={styles.linkButton}
+          onPress={() => navigation.navigate('Register')}
+        >
+          <Text style={styles.linkButtonText}>Register</Text>
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    resizeMode: 'cover', // Adjusts the size of the image to cover the entire screen
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
+    backgroundColor: 'rgba(169, 169, 169, 0.6)', // Light grey background with opacity
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+    color: '#000000', // Dark black text color
+  },
+  inputContainer: {
+    marginBottom: 20,
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
+    height: 50, // Increased input box height
+    borderColor: '#000000', // Black border color
     borderWidth: 1,
-    marginBottom: 20,
-    paddingHorizontal: 10,
-    borderRadius: 5,
+    paddingHorizontal: 15,
+    borderRadius: 25, // Rounded edges
+    color: '#000000', // Dark black text color
   },
   button: {
-    backgroundColor: '#6200EE',
+    backgroundColor: '#388E3C', // Darker green for the button
     paddingVertical: 15,
-    borderRadius: 5,
+    borderRadius: 25, // Rounded edges
     alignItems: 'center',
   },
   buttonText: {
@@ -132,12 +162,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   linkButton: {
-    marginTop: 10,
+    marginTop: 15,
     alignItems: 'center',
   },
   linkButtonText: {
-    color: '#6200EE',
-    fontSize: 14,
+    color: '#000000', // Dark black for the link text
+    fontSize: 18, // Larger text size for links
     fontWeight: 'bold',
   },
 });

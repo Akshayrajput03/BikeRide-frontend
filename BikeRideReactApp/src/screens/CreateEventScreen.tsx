@@ -10,14 +10,16 @@ type CreateEventScreenRouteProp = RouteProp<RootStackParamList, 'CreateEvent'>;
 
 const CreateEventScreen: React.FC = ({ navigation }) => {
   const route = useRoute<CreateEventScreenRouteProp>();
-  const { id, username } = route.params || {}; // Extract id and username
+  const { id, username } = route.params || {};
 
   const [rideName, setRideName] = useState('');
   const [rideType, setRideType] = useState('PUBLIC');
   const [location, setLocation] = useState('');
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
-  const [description, setDescription] = useState(''); 
+  const [description, setDescription] = useState('');
+  const [mobileNumber, setMobileNumber] = useState(''); // New state for mobileNumber
+  const [itenary, setItenary] = useState(''); // New state for itenary
 
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
@@ -32,6 +34,8 @@ const CreateEventScreen: React.FC = ({ navigation }) => {
       description,
       userId: id,
       username,
+      mobileNumber, // Include mobileNumber in the payload
+      itenary, // Include itenary in the payload
     };
 
     try {
@@ -127,13 +131,30 @@ const CreateEventScreen: React.FC = ({ navigation }) => {
 
       <TextInput
         style={styles.input}
+        placeholder="Mobile Number"
+        value={mobileNumber}
+        onChangeText={setMobileNumber}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Itenary"
+        value={itenary}
+        onChangeText={setItenary}
+        multiline
+      />
+
+      <TextInput
+        style={styles.input}
         placeholder="Description"
         value={description}
         onChangeText={setDescription}
         multiline
       />
 
-      <Button title="Create Ride" onPress={handleCreateRide} />
+      <TouchableOpacity style={styles.button} onPress={handleCreateRide}>
+        <Text style={styles.buttonText}>Create Ride</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -143,6 +164,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
+    backgroundColor: 'rgba(169, 169, 169, 0.6)',
   },
   title: {
     fontSize: 24,
@@ -153,13 +175,27 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginVertical: 8,
+    color: '#000000',
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
+    height: 50,
+    borderColor: '#000000',
     borderWidth: 1,
     marginBottom: 20,
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
+    borderRadius: 25,
+    color: '#000000',
+  },
+  button: {
+    backgroundColor: '#388E3C',
+    paddingVertical: 15,
+    borderRadius: 25,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

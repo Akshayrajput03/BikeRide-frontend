@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import api from '../api/axiosConfig'; // Import the Axios instance
 
 const RegisterScreen = ({ navigation }) => {
@@ -8,6 +8,7 @@ const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [mobileNumber, setMobileNumber] = useState('');
 
   const handleRegister = async () => {
     if (password !== confirmPassword) {
@@ -21,11 +22,16 @@ const RegisterScreen = ({ navigation }) => {
         username: username,
         email: email,
         password: password,
+        mobileNum: mobileNumber, // Include mobile number in the request object
       });
 
       if (response.status === 200) {
-        Alert.alert('Registration Successful', 'You can now log in.');
-        navigation.navigate('Login');
+        Alert.alert('Registration Successful', 'Registration Successful', [
+          {
+            text: 'OK',
+            onPress: () => navigation.navigate('Login'), // Navigate to Login after closing the alert
+          },
+        ]);
       } else {
         Alert.alert('Registration Failed', 'Please try again.');
       }
@@ -62,6 +68,14 @@ const RegisterScreen = ({ navigation }) => {
 
       <TextInput
         style={styles.input}
+        placeholder="Mobile Number"
+        value={mobileNumber}
+        onChangeText={setMobileNumber}
+        keyboardType="phone-pad"
+      />
+
+      <TextInput
+        style={styles.input}
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
@@ -76,7 +90,9 @@ const RegisterScreen = ({ navigation }) => {
         secureTextEntry
       />
 
-      <Button title="Register" onPress={handleRegister} />
+      <TouchableOpacity style={styles.button} onPress={handleRegister}>
+        <Text style={styles.buttonText}>Register</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -86,19 +102,34 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
+    backgroundColor: '#F2FAFA', // Background color similar to PublicRidesScreen
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+    color: '#000000', // Dark black text color
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
+    height: 50,
+    borderColor: '#000000', // Black border color
     borderWidth: 1,
+    borderRadius: 25, // Rounded edges
     marginBottom: 20,
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
+    color: '#000000', // Dark black text color
+  },
+  button: {
+    backgroundColor: '#388E3C', // Green color similar to login button
+    paddingVertical: 15,
+    borderRadius: 25, // Rounded edges
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

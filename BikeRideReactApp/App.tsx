@@ -9,6 +9,7 @@ import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen';
 import PublicRidesScreen from './src/screens/PublicRidesScreen';
 import PrivateRidesScreen from './src/screens/PrivateRidesScreen';
 import CreateEventScreen from './src/screens/CreateEventScreen';
+import RideDetailsScreen from './src/screens/RideDetailsScreen';
 
 type RootStackParamList = {
   Login: undefined;
@@ -16,19 +17,20 @@ type RootStackParamList = {
   ForgotPassword: undefined;
   RidesTabs: { id: string; username: string };
   CreateEvent: { id: string; username: string };
+  RideDetails: { rideId: string };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
 
-const RidesTabs: React.FC<{ route: any }> = ({ route }) => {
-  const { id, username } = route.params || {}; // Safely access params
-    console.log('RidesTabs route params:', route.params);
+const RidesTabs: React.FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
+  const { id, username } = route.params || {};
+
   return (
     <Tab.Navigator>
       <Tab.Screen name="Public Rides" component={PublicRidesScreen} />
       <Tab.Screen name="Private Rides">
-        {() => <PrivateRidesScreen route={{ params: { id, username } }} />}
+        {() => <PrivateRidesScreen route={{ params: { id, username } }} navigation={navigation} />}
       </Tab.Screen>
     </Tab.Navigator>
   );
@@ -47,7 +49,7 @@ const App: React.FC = () => {
           options={({ route, navigation }) => ({
             title: 'Rides',
             headerRight: () => {
-              const { id, username } = route.params || {}; // Safely access params
+              const { id, username } = route.params || {};
               return (
                 <TouchableOpacity
                   onPress={() => navigation.navigate('CreateEvent', { id, username })}
@@ -60,6 +62,7 @@ const App: React.FC = () => {
           })}
         />
         <Stack.Screen name="CreateEvent" component={CreateEventScreen} />
+        <Stack.Screen name="RideDetails" component={RideDetailsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
