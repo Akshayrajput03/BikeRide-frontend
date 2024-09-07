@@ -1,20 +1,20 @@
-# Use a Node.js base image
+# Use the official Node.js image
 FROM node:18
 
 # Set the working directory
 WORKDIR /app
 
 # Copy package.json and package-lock.json
-COPY package*.json ./
+COPY BikeRideReactApp/package*.json ./
 
 # Install dependencies
 RUN npm install
 
 # Copy the rest of the application code
-COPY . .
+COPY BikeRideReactApp/ .
 
-# Expose the port (adjust if needed)
-EXPOSE 8080
+# Build the React app
+RUN npm run build
 
-# Command to run the application
+# Serve the app
 CMD ["npm", "start"]
