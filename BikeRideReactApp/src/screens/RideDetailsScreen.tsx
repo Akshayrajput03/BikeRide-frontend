@@ -54,6 +54,7 @@ const RideDetailsScreen: React.FC<RideDetailsScreenProps> = ({ route }) => {
   const [addUserModalVisible, setAddUserModalVisible] = useState(false);
   const [removeUserModalVisible, setRemoveUserModalVisible] = useState(false);
   const [newUserName, setNewUserName] = useState('');
+  const [newUserMobileNumber, setNewUserMobileNumber] = useState('');
   const [userList, setUserList] = useState<User[]>([]);
   const [newItenary, setNewItenary] = useState<string>('');
 
@@ -80,12 +81,15 @@ const RideDetailsScreen: React.FC<RideDetailsScreenProps> = ({ route }) => {
 
   const handleAddUser = async () => {
     try {
-      const response = await api.post('/ride/addUser', { rideId: rideId, rideAddUserName: newUserName });
-      if (response.status === 200) {
+      const response = await api.post('/ride/addUser', { rideId: rideId, rideAddUserName: newUserName, mobileNumber: newUserMobileNumber });
+      if (response.status === 200 && response.data.resCode === '2000') {
         Alert.alert('Success', 'User added successfully');
         setAddUserModalVisible(false);
         await fetchRideDetails();
-      } else {
+      } else if (response.data.errorDesc) {
+        // Show the specific error message received from the server
+        Alert.alert('Add user Failed', response.data.errorDesc);
+      }else {
         Alert.alert('Error', 'Failed to add user');
       }
     } catch (error) {
@@ -97,11 +101,14 @@ const RideDetailsScreen: React.FC<RideDetailsScreenProps> = ({ route }) => {
   const handleRemoveUser = async (username: string) => {
     try {
       const response = await api.post('/ride/removeUser', { rideId: rideId, rideAddUserName: username });
-      if (response.status === 200) {
+      if (response.status === 200 && response.data.resCode === '2000') {
         Alert.alert('Success', 'User removed successfully');
         setModalVisible(false);
         await fetchRideDetails();
-      } else {
+      } else if (response.data.errorDesc) {
+        // Show the specific error message received from the server
+        Alert.alert('Remove user Failed', response.data.errorDesc);
+      }else {
         Alert.alert('Error', 'Failed to remove user');
       }
     } catch (error) {
@@ -112,9 +119,11 @@ const RideDetailsScreen: React.FC<RideDetailsScreenProps> = ({ route }) => {
 
   const handleDeleteRide = async () => {
     try {
-      const response = await api.delete(`/ride/deleteRide/${rideId}`);
+      const response = await api.post('/ride/deleteRide', { rideId: rideId});
       if (response.status === 200) {
         Alert.alert('Success', 'Ride deleted successfully');
+        setModalVisible(false);
+        await fetchRideDetails();
       } else {
         Alert.alert('Error', 'Failed to delete ride');
       }
@@ -264,6 +273,12 @@ const RideDetailsScreen: React.FC<RideDetailsScreenProps> = ({ route }) => {
                 value={newUserName}
                 onChangeText={setNewUserName}
               />
+              <TextInput
+                  style={styles.input}
+                  placeholder="Enter mobile number"
+                  value={newUserMobileNumber}
+                  onChangeText={setNewUserMobileNumber}
+                />
               <TouchableOpacity style={styles.addButton} onPress={handleAddUser}>
                 <Text style={styles.buttonText}>Add User</Text>
               </TouchableOpacity>

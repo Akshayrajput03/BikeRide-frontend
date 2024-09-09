@@ -24,15 +24,18 @@ const RegisterScreen = ({ navigation }) => {
         password: password,
         mobileNum: mobileNumber, // Include mobile number in the request object
       });
-
-      if (response.status === 200) {
+        console.log('response:{}  ',response);
+      if (response.status === 200 && response.data.resCode === '2000') {
         Alert.alert('Registration Successful', 'Registration Successful', [
           {
             text: 'OK',
             onPress: () => navigation.navigate('Login'), // Navigate to Login after closing the alert
           },
         ]);
-      } else {
+      } else if (response.data.errorDesc) {
+              // Show the specific error message received from the server
+              Alert.alert('Registration Failed', response.data.errorDesc);
+      }else {
         Alert.alert('Registration Failed', 'Please try again.');
       }
     } catch (error) {

@@ -2,7 +2,7 @@
 
 const ENV = {
   dev: {
-    apiUrl: 'http://192.168.0.110:9091',
+    apiUrl: 'http://3.104.121.149:8081',
   },
   staging: {
     apiUrl: 'https://staging.yourapi.com',
